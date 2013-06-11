@@ -29,7 +29,7 @@ struct eeprom_data {
 void main(int argc, char **argv) {
 	int i;
 
-	struct data_format data;
+	struct eeprom_data data;
 
 	data.header[0] = 0xAA;
 	data.header[1] = 0x55;
