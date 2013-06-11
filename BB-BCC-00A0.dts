@@ -1,0 +1,147 @@
+opyright (C) 2013 Tom King <ka6sox@gmail.com>
+ *                 (C) 2013 Ian McMahon <ian.mcmahon@prototechnical.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+/dts-v1/;
+/plugin/;
+
+/ {
+        compatible = "ti,beaglebone", "ti,beaglebone-black";
+
+        /* identification */
+        part-number = "BB-BONE-BCC";
+        version = "00A0";
+
+        /* state the resources this cape uses */
+        exclusive-use =
+                /* the pin header uses */
+                "P8.17",        /* SPI0: spi0_cs0 */
+                "P8.18",        /* SPI0: spi0_d1 */
+                "P8.21",        /* SPI0: spi0_d0 */
+                "P8.22",        /* SPI0: spi0_sclk */
+                "P8.12",        /* GPMC: gpmc_be1n */
+                "P9.25",        /* GPMC: gpmc_ad0 */
+                "P9.24",        /* GPMC: gpmc_ad1 */
+                "P9.5",          /* GPMC: gpmc_ad2 */
+                "P9.6",          /* GPMC: gpmc_ad3 */
+                "P9.23",        /* GPMC: gpmc_ad4 */
+                "P9.22",        /* GPMC: gpmc_ad5 */
+                "P9.3",          /* GPMC: gpmc_ad6 */
+                "P9.4",          /* GPMC: gpmc_ad7 */
+                "P9.19",        /* GPMC: gpmc_ad8 */
+                "P9.13",        /* GPMC: gpmc_ad9 */
+                "P9.14",        /* GPMC: gpmc_ad10 */
+                "P9.17",        /* GPMC: gpmc_ad11 */
+                "P9.12",        /* GPMC: gpmc_ad12 */
+                "P9.11",        /* GPMC: gpmc_ad13 */
+                "P9.16",        /* GPMC: gpmc_ad14 */
+                "P9.15",        /* GPMC: gpmc_ad15*/
+                "P9.7",          /* GPMC: gpmc_advn_ale */
+                "P9.8",          /* GPMC: gpmc_oen_ren */
+                "P9.10",        /* GPMC: gpmc_wen */
+                "P9.9",          /* GPMC: gpmc_be0n_cle */
+                "P9.18",        /* GPMC: gpmc_clk */
+                "P9.26",        /* GPMC: gpmc_csn0 */
+                "P9.21",        /* GPMC: gpmc_csn1 */
+                "P9.20",        /* GPMC: gpmc_csn2 */
+                "P9.12",        /* GPMC: gpmc_be1n */
+                “P9.41”,        /* clkout2 */
+
+
+                /* the hardware IP uses */
+                "GPMC",
+                "SPI0",
+                “clkout2”;
+         
+         
+
+   fragment@0 {
+      target = <&am33xx_pinmux>;
+      __overlay__ {
+         bb_gpmc_pins: pinmux_bb_gpmc_pins {
+            pinctrl-single,pins = <
+
+               /* clock */
+               0x08C 0x30  /* gpmc_clk, INPUT_PULLUP | MODE0 */
+               
+               /* address/data muxed bus */
+               0x000 0x30  /* gpmc_ad0, INPUT_PULLUP | MODE0 */
+               0x004 0x30  /* gpmc_ad1, INPUT_PULLUP | MODE0 */
+               0x008 0x30  /* gpmc_ad2, INPUT_PULLUP | MODE0 */
+               0x00c 0x30  /* gpmc_ad3, INPUT_PULLUP | MODE0 */
+               0x010 0x30  /* gpmc_ad4, INPUT_PULLUP | MODE0 */
+               0x014 0x30  /* gpmc_ad5, INPUT_PULLUP | MODE0 */
+               0x018 0x30  /* gpmc_ad6, INPUT_PULLUP | MODE0 */
+               0x01c 0x30  /* gpmc_ad7, INPUT_PULLUP | MODE0 */
+               0x020 0x30  /* gpmc_ad8, INPUT_PULLUP | MODE0 */
+               0x024 0x30  /* gpmc_ad9, INPUT_PULLUP | MODE0 */
+               0x028 0x30  /* gpmc_ad10, INPUT_PULLUP | MODE0 */
+               0x02c 0x30  /* gpmc_ad11, INPUT_PULLUP | MODE0 */
+               0x030 0x30  /* gpmc_ad12, INPUT_PULLUP | MODE0 */
+               0x034 0x30  /* gpmc_ad13, INPUT_PULLUP | MODE0 */
+               0x038 0x30  /* gpmc_ad14, INPUT_PULLUP | MODE0 */
+               0x03c 0x30  /* gpmc_ad15, INPUT_PULLUP | MODE0 */
+               
+               /* control */
+               0x090 0x10  /* gpmc_advn_ale, OUTPUT_PULLUP | MODE0 */
+               0x094 0x10  /* gpmc_oen_ren, OUTPUT_PULLUP | MODE0 */
+               0x098 0x10  /* gpmc_wen, OUTPUT_PULLUP | MODE0 */
+               0x09c 0x10  /* gpmc_be0n_cle, OUTPUT_PULLUP | MODE0 */
+               
+               /* chipselects */
+               0x07C 0x10  /* gpmc_csn0, OUTPUT_PULLUP | MODE0 */
+               0x080 0x10  /* gpmc_csn1, OUTPUT_PULLUP | MODE0 */
+               0x084 0x10  /* gpmc_csn2, OUTPUT_PULLUP | MODE0 */
+               
+            >;
+         }; 
+      }; 
+   }; 
+
+       fragment@1 {
+               target = <&gpmc>;
+               depth = <1>;    /* only create devices on depth 1 */
+ 
+               /* stupid warnings */
+               #address-cells = <1>;
+               #size-cells = <1>;
+               ranges;
+ 
+               __overlay__ {
+ 
+                       status = "okay";
+ 
+                       #address-cells = <2>;
+                       #size-cells = <1>;
+ 
+                       pinctrl-names = "default";
+                       pinctrl-0 = <&gpmc_pins>;
+ 
+                       /* chip select ranges */
+                       ranges = <0 0 0x00000000 0x00001000>; 
+  /* CS0 @addr 0x0000000, size 0x00001000 */
+
+                                     <1 0 0x00002000 0x00001000>; 
+ /* CS1 @addr 0x0002000, size 0x00001000 */                    
+ 
+sram@0 {
+        			compatible = "xilinx,xc3s200a","sram";
+			address-cells = <1>;
+        			size-cells = <1>;
+			bank-width = <2>
+
+        			bram@0 {
+                			reg = <0x0000000 0x001000>;
+        			};
+
+        			registers@2000 {
+                			reg = <0x0002000 0x001000>;
+        			};
+};
+	};
+};
+
+
