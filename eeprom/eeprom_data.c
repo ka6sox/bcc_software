@@ -54,9 +54,9 @@ void main(int argc, char **argv) {
 
 	int fd = open("data.bin", O_WRONLY | O_CREAT, 0644);
 
-	byte *byteptr = &data;
+	byte *byteptr = (byte *)&data;
 
-	write(fd, byteptr, sizeof(struct data_format));
+	write(fd, byteptr, sizeof(struct eeprom_data));
 
 	close(fd);
 	
