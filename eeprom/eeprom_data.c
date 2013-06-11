@@ -39,7 +39,7 @@ void main(int argc, char **argv) {
 	strncpy((data.board_name),	 		"BCC", 32);
 	strncpy((data.version), 			"00A0", 4);
 	strncpy((data.manufacturer),		"bcc folks", 16);
-	strncpy((data.part_number), 		"BB-SPI0-SPIDEV", 16);
+	strncpy((data.part_number), 		"BB-SPI0_SPIDEV", 16);
 	strncpy((data.serial_number), 	"0001", 12);
 	data.num_pins = 92;
 
