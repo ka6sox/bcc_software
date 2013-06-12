@@ -19,21 +19,25 @@ module sync_single_read_tb;
 	reg oe;
 	reg dir;
 
-	reg [15:0] ad_in;
-	wire [15:0] data_out;
+	reg [15:0] ad;
 
-	// Instantiate the Unit Under Test (UUT)
-	gpmc_sram uut (
+	wire [10:0] a_addr;
+	wire [15:0] a_din;
+	wire [15:0] a_dout;
+	wire a_wr;
+	wire a_ena;
+	
+	
+	gpmc_sram_top top_under_test (
 		.GPMC_CLK(clk),
-		.GPMC_AD_IN(ad_in),
-		.GPMC_DATA_OUT(data_out),
+		.GPMC_AD(ad),
 		.GPMC_CS(cs),
 		.GPMC_ADV(adv),
 		.GPMC_DIR(dir),
 		.GPMC_OE(oe),
 		.GPMC_BE0(be0),
 		.GPMC_BE1(be1),
-		.GPMC_WP(0)
+		.GPMC_WP(1'b0)
 	);
 
 	initial begin
@@ -55,7 +59,7 @@ module sync_single_read_tb;
 		#40;
       
 		// select address 0x0000
-		ad_in = 16'h0000;
+		ad = 16'h001F;
 		
 		// enable GPMC_CLK
 		#10 clk_en = 1;
@@ -71,10 +75,10 @@ module sync_single_read_tb;
 		oe = 0;
 		
 		// kill clock
-		#30 clk_en = 0;
+		#35 clk_en = 0;
 		
 		// dir back to in
-		#10 dir = 0;
+		#5 dir = 0;
 		oe = 1;
 		cs = 1;
 		

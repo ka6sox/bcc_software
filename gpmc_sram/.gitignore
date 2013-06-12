@@ -2,6 +2,7 @@ ipcore_dir
 _xmsgs
 iseconfig
 isim
+xst
 
 *.xise
 *.html
@@ -14,3 +15,13 @@ isim
 *.wcfg
 *.ini
 *.prj
+*.stx
+*.xst
+*.cmd_log
+*.lso
+*.ngc
+*.ngr
+*.stx
+*.syr
+*.xrpt
+*.xml
