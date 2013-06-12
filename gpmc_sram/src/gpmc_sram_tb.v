@@ -1,24 +1,8 @@
 `timescale 1ns / 1ps
 
 ////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer:
 //
-// Create Date:   11:13:35 06/12/2013
-// Design Name:   gpmc_sram
-// Module Name:   Z:/beagle/bcc_software/gpmc_sram/src/gpmc_sram_tb.v
-// Project Name:  gpmc_sram
-// Target Device:  
-// Tool versions:  
-// Description: 
-//
-// Verilog Test Fixture created by ISE for module: gpmc_sram
-//
-// Dependencies:
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
+// Copyright (c) 2013 Ian McMahon <imcmahon@prototechnical.com>
 // 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -35,18 +19,14 @@ module gpmc_sram_tb;
 	reg oe;
 	reg dir;
 
-	// Bidirs
-	wire [15:0] ad;
-
-	wire [15:0] ad_fromram;
-	reg  [15:0] ad_toram;
-
-	assign ad = (dir) ? ad_toram : ad_fromram;
+	reg [15:0] ad_in;
+	wire [15:0] data_out;
 
 	// Instantiate the Unit Under Test (UUT)
 	gpmc_sram uut (
 		.GPMC_CLK(clk),
-		.GPMC_AD(ad),
+		.GPMC_AD_IN(ad_in),
+		.GPMC_DATA_OUT(data_out),
 		.GPMC_CS(cs),
 		.GPMC_ADV(adv),
 		.GPMC_DIR(dir),
@@ -61,21 +41,42 @@ module gpmc_sram_tb;
 		fclk = 1;
 		clk = 0;
 		clk_en = 0;
+	
 		
 		dir = 0; // 0 master out, 1 master in
 		adv = 1; // active low
 		oe  = 1; // active low
 		be0 = 1; // active low
 		be1 = 1; // active low
-		
+		cs = 1;  // active low
 		
 		
 		// Wait 40 ns for global reset to finish
 		#40;
       
 		// select address 0x0000
-		ad_toram = 16'h0000;
+		ad_in = 16'h0000;
+		
+		// enable GPMC_CLK
 		#10 clk_en = 1;
+		
+		// enable CS and ADV/ALE for two periods of CLK
+		#10 cs = 0;
+		adv = 0;
+		
+		#20 adv = 1;
+		
+		// after two more periods, assert dir = IN and output enable
+		#20 dir = 1;
+		oe = 0;
+		
+		// kill clock
+		#30 clk_en = 0;
+		
+		// dir back to in
+		#10 dir = 0;
+		oe = 1;
+		cs = 1;
 		
 	end
       
