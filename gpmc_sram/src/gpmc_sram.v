@@ -31,7 +31,4 @@ module gpmc_sram(
 		input			 GPMC_DIR
 );
 
-
-
-
 endmodule

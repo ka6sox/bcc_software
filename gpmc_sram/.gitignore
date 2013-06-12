@@ -1,7 +1,16 @@
 ipcore_dir
 _xmsgs
 iseconfig
+isim
 
 *.xise
 *.html
 *.gise
+*.log
+*.xmsgs
+*.cmd
+*.exe
+*.wdb
+*.wcfg
+*.ini
+*.prj
