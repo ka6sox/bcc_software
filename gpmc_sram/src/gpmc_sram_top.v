@@ -31,15 +31,15 @@ module gpmc_sram_top(
 		input			  GPMC_DIR
 );
 
-wire gpmc_ad_in;
-reg  gpmc_ad_out;
+wire [15:0] gpmc_ad_in;
+wire [15:0] gpmc_ad_out;
 
-wire a_clk;
 wire a_ena;
 wire a_wr;
 wire [10:0] a_addr;
 wire [15:0] a_din;
 wire [15:0] a_dout;
+
 
 IOBUF #(
    .DRIVE(12), // Specify the output drive strength
@@ -48,14 +48,14 @@ IOBUF #(
    .IOSTANDARD("DEFAULT"), // Specify the I/O standard
    .SLEW("SLOW") // Specify the output slew rate
 ) IOBUF_gpmc_ad[15:0] (
-   .O(gpmc_ad_in),  	// Buffer output
    .IO(GPMC_AD),		// Buffer inout port (connect directly to top-level port)
-   .I(gpmc_ad_out),	// Buffer input
+   .I(gpmc_ad_out), // Buffer input
+   .O(gpmc_ad_in),	// Buffer output
    .T(~GPMC_DIR)    	// 3-state enable input, high=input, low=output
 );
   
 bram2k_x_16bit bram (
-	.a_clk(a_clk),
+	.a_clk(GPMC_CLK),
 	.a_wr(a_wr),
 	.a_ena(a_ena),
 	.a_addr(a_addr),

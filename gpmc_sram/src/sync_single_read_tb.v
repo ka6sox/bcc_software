@@ -19,13 +19,20 @@ module sync_single_read_tb;
 	reg oe;
 	reg dir;
 
-	reg [15:0] ad;
+	reg [15:0] ad_in;
+	wire [15:0] ad, ad_out;
 
 	wire [10:0] a_addr;
 	wire [15:0] a_din;
 	wire [15:0] a_dout;
 	wire a_wr;
 	wire a_ena;
+	
+	//if dir is low, BBB is driving AD.  Contents of ad_in are set by the testbench, and represent what BBB is sending. 
+	assign ad = (dir == 0) ? ad_in : 16'hZZ;
+	
+	// if dir is high, GPMC device is driving AD, and ad_out should reflect what's on the AD wire.
+	assign ad_out = (dir == 1) ? ad : 16'hZZ;
 	
 	
 	gpmc_sram_top top_under_test (
@@ -59,7 +66,7 @@ module sync_single_read_tb;
 		#40;
       
 		// select address 0x0000
-		ad = 16'h001F;
+		ad_in = 16'h001F;
 		
 		// enable GPMC_CLK
 		#10 clk_en = 1;
